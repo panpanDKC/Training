@@ -58,6 +58,17 @@ bst* get_bst(bst* b, int x){
 	err(1,"There is no %d in the tree !\n",x);
 }
 
+bst* get_max_bst(bst* b){
+	if(b->r != NULL){
+		get_max_bst(b->r);
+	}
+	return b;
+}
+
+bst* rm_bst(bst* b, int x){
+
+}
+
 int main(){
 	bst* test = init_bst(4);
 
