@@ -6,11 +6,16 @@ typedef struct db_list{
 	struct db_list* prev;
 }db_list;
 
-
+//ACTIONS
 db_list* init_dbl();
 void add_dbl(db_list* db, int x);
+void insert_dbl(db_list* db, db_list* x, size_t i);
 int remove_dbl(db_list* db, int x);
+void __insert_sort_dbl(db_list* ins, db_list* res);
+db_list* insert_sort_dbl(db_list* db);
+
+//INFO
 size_t len_dbl(db_list* db);
 int is_empty_dbl(db_list* db);
 void print_db(db_list* db);
-void insert_dbl(db_list* db, int x, size_t i);
+int is_sorted_dbl(db_list* db);

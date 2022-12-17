@@ -21,25 +21,23 @@ void add_dbl(db_list* db, int x){
 	add->prev = tmp;
 }
 
-void insert_dbl(db_list* db, int x, size_t i){
-	db_list* ins = init_dbl();
-	ins->data = x;
-
+void insert_dbl(db_list* db, db_list* x, size_t i){
 	db_list* tmp = db;
 	while(tmp->next != NULL && i != 0){
 		tmp = tmp->next;
 		i--;
 	}
 	if(tmp->next == NULL){
-		tmp->next = ins;
-		ins->prev = tmp;
+		tmp->next = x;
+		x->prev = tmp;
+		x->next = NULL;
 	}
 	else{
 		db_list* t = tmp->next;
-		tmp->next = ins;
-		ins->prev = tmp;
-		ins->next = t;
-		t->prev = ins;
+		tmp->next = x;
+		x->prev = tmp;
+		x->next = t;
+		t->prev = x;
 	}
 }
 
@@ -74,7 +72,7 @@ int is_empty_dbl(db_list* db){
 }
 
 void print_db(db_list* db){
-	printf("[ ");
+	printf("[");
 
 	db_list* tmp = db->next;
 	while(tmp != NULL){
@@ -84,17 +82,63 @@ void print_db(db_list* db){
 	printf(" NULL ]\n");
 }
 
+int is_sorted_dbl(db_list* db){
+	db_list* tmp = db->next;
+	if(tmp == NULL)
+		return 1;
+	while(tmp->next != NULL && tmp->data < tmp->next->data){
+		tmp = tmp->next;
+	}
+	if(tmp->next == NULL)
+		return 1;
+	return 0;
+}
+
+void __insert_sort_dbl(db_list* ins, db_list* res){
+	db_list* tmp = res->next;
+	if(tmp == NULL){
+		insert_dbl(res,ins,0);
+		return;
+	}
+
+	int i = 0;
+	while(tmp != NULL && tmp->data < ins->data){
+		tmp = tmp->next;
+		i++;
+	}
+	insert_dbl(res,ins,i);
+}
+
+db_list* insert_sort_dbl(db_list* db){
+	db_list* tmp = db->next;
+	db_list* res = init_dbl();
+	while(tmp != NULL){
+		//print_db(res);
+		db_list* tmp2 = tmp->next;
+		__insert_sort_dbl(tmp, res);
+		tmp = tmp2;
+	}
+	return res;
+}
+
 int main(){
 	db_list* test = init_dbl();
-	add_dbl(test, 45);
-	add_dbl(test, 5);
-	add_dbl(test, 19);
+	add_dbl(test, 4);
+	add_dbl(test, 1);
+	add_dbl(test, 9);
 	print_db(test);
 
-	insert_dbl(test, 8, 10);
+	db_list* x = init_dbl();
+	x->data = 8;
+	insert_dbl(test, x, 1);
 	print_db(test);
 
 	printf("len : %zu\n",len_dbl(test));
+	printf("is_sorted : %d\n",is_sorted_dbl(test));
 
-	return 0;
+	db_list* test_sorted = insert_sort_dbl(test);
+	printf("is_sorted : %d\n",is_sorted_dbl(test_sorted));
+	print_db(test_sorted);
+
+	return 1;
 }
