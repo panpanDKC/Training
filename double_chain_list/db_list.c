@@ -25,13 +25,22 @@ void insert_dbl(db_list* db, int x, size_t i){
 	db_list* ins = init_dbl();
 	ins->data = x;
 
-	db_list* tmp = db->next;
-	while(tmp != NULL && i != 0){
+	db_list* tmp = db;
+	while(tmp->next != NULL && i != 0){
 		tmp = tmp->next;
 		i--;
 	}
-
-	//TODO
+	if(tmp->next == NULL){
+		tmp->next = ins;
+		ins->prev = tmp;
+	}
+	else{
+		db_list* t = tmp->next;
+		tmp->next = ins;
+		ins->prev = tmp;
+		ins->next = t;
+		t->prev = ins;
+	}
 }
 
 int remove_dbl(db_list* db, int x){
@@ -82,7 +91,7 @@ int main(){
 	add_dbl(test, 19);
 	print_db(test);
 
-	remove_dbl(test,5);
+	insert_dbl(test, 8, 10);
 	print_db(test);
 
 	printf("len : %zu\n",len_dbl(test));
