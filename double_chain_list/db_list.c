@@ -121,6 +121,28 @@ db_list* insert_sort_dbl(db_list* db){
 	return res;
 }
 
+void reverse_dbl(db_list* db){
+	db_list* tmp = db->next;
+	if(tmp == NULL || tmp->next == NULL){
+		return;
+	}
+
+	struct db_list* curr = tmp->next;
+    tmp->next = NULL;
+    while(curr->next != NULL)
+    {
+        struct db_list* swap = curr->next;
+        curr->next = tmp;
+		curr->prev = swap;
+        tmp = curr;
+        curr = swap;
+    }
+    curr->next = tmp;
+	curr->prev = db;
+    db->next = curr;
+
+}
+
 int main(){
 	db_list* test = init_dbl();
 	add_dbl(test, 4);
@@ -138,6 +160,9 @@ int main(){
 
 	db_list* test_sorted = insert_sort_dbl(test);
 	printf("is_sorted : %d\n",is_sorted_dbl(test_sorted));
+	print_db(test_sorted);
+
+	reverse_dbl(test_sorted);
 	print_db(test_sorted);
 
 	return 1;
